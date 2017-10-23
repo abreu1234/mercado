@@ -1,0 +1,16 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome do cliente</th>
+      <th>Valor total</th>
+      <th>Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let venda of vendas">
+      <td>{{venda.cliente.nome}}</td>
+      <td>{{venda.total | currency:'BRL':true}}</td>
+      <td>{{venda.data | date:'dd/MM/y' }}</td>
+    </tr>
+  </tbody>
+</table>

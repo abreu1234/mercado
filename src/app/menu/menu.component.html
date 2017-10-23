@@ -1,0 +1,36 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <span class="navbar-brand">Mercado</span>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown" dropdown>
+                <a dropdownToggle role="button">
+                  Produtos <span class="caret"></span>
+                </a>
+                <ul *dropdownMenu class="dropdown-menu"> <!-- {3} -->
+                    <li><a routerLink="/produto">Ver todos</a></li>
+                    <li><a routerLink="/produto/add">Adicionar</a></li>
+                </ul>
+            </li> 
+            <li class="dropdown" dropdown>
+                <a dropdownToggle role="button">
+                  Clientes <span class="caret"></span>
+                </a>
+                <ul *dropdownMenu class="dropdown-menu"> <!-- {3} -->
+                    <li><a routerLink="/cliente">Ver todos</a></li>
+                    <li><a routerLink="/cliente/add">Adicionar</a></li>
+                </ul>
+            </li>
+            <li class="dropdown" dropdown>
+                <a dropdownToggle role="button">
+                  Vendas <span class="caret"></span>
+                </a>
+                <ul *dropdownMenu class="dropdown-menu"> <!-- {3} -->
+                    <li><a routerLink="/venda">Ver todos</a></li>
+                    <li><a routerLink="/venda/add">Adicionar</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
