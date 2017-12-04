@@ -46,6 +46,7 @@ export class VendaFormComponent implements OnInit {
               msg: 'Venda efetuada com sucesso',
               timeout: 3000
             });
+            this.venda = new Venda;
           }else{
             this.alerts.push({
               type: 'warning',
@@ -56,8 +57,6 @@ export class VendaFormComponent implements OnInit {
          },
         erro => { console.log('ERROR', erro); }
       );
-
-      //this.venda = new Venda;
     }
   }
 
