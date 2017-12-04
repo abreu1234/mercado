@@ -10,7 +10,7 @@
     <tr *ngFor="let venda of vendas">
       <td>{{venda.cliente.nome}}</td>
       <td>{{venda.total | currency:'BRL':true}}</td>
-      <td>{{venda.data | date:'dd/MM/y' }}</td>
+      <td>{{venda.created | date:'dd/MM/y' }}</td>
     </tr>
   </tbody>
 </table>

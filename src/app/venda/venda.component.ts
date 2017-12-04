@@ -14,7 +14,10 @@ export class VendaComponent implements OnInit {
   constructor(private vendaService: VendaService) { }
 
   ngOnInit() {
-    //this.vendas = this.vendaService.get();
+    this.vendaService.get().subscribe(
+      dados => { this.vendas = dados; },
+      erro => { console.log('ERROR', erro); }
+    );
   }
 
 }
