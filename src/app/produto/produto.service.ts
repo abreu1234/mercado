@@ -1,39 +1,63 @@
 import { Injectable } from '@angular/core';
 import { Produto } from './produto.class';
 
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs/RX';
+
 @Injectable()
 export class ProdutoService {
 
-  produtos: Produto[] = [
-    {id: 1, nome: 'Produto1', ref: 'REF01', valor: 20, estoque: 5, date: new Date(2017, 9, 18)}
-  ];
+  produtos: Produto[] = [];
+  uri: string = 'http://localhost/mercado_api/api/produto/';
   ai: number = 2;
 
-  constructor() { }
+  constructor(private http: Http) { }
 
-  get() {
-    return this.produtos;
+  get(): Observable<Produto[]> {
+    return this.http.get( this.uri )
+      .map((res: Response) => {
+        return res.json().produto; 
+      })
+      .catch((erro: any) => Observable.throw(erro));
   }
 
-  getById(id:number) {
-    return this.produtos.find(produto => produto.id == id);
+  getById(id: number): Observable<Produto> {
+    return this.http.get( this.uri+id )
+    .map((res: Response) => {
+      return res.json().produto; 
+    })
+    .catch((erro: any) => Observable.throw(erro));
   }
 
   add(produto: Produto) {
-    produto.id = this.ai++;
-    this.produtos.push(produto);
+    let bodyString = JSON.stringify(produto);
+    let cabecalho = new Headers({'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers: cabecalho});
+    
+    return this.http.post(this.uri, bodyString, options)
+      .map((res:Response) => {return res.json()})
+      .catch((erro:any) => Observable.throw(erro));
   }
 
-  edit(id: number, produto: Produto) {
-    let index = this.produtos.indexOf(this.getById(id), 0);
-    this.produtos[index] = produto;
+  edit(id: number, produto: Produto): Observable<Produto> {
+    let bodyString = JSON.stringify(produto);
+    let cabecalho = new Headers({'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers: cabecalho});
+    
+    return this.http.put(this.uri+id, bodyString, options)
+      .map((res:Response) => {return res.json()})
+      .catch((erro:any) => Observable.throw(erro));
   }
 
-  remove(produto: Produto) {
-    let index = this.produtos.indexOf(produto, 0);
-    if(index > -1) {
-      this.produtos.splice(index, 1);
-    }
+  remove(produto: Produto): Observable<Produto> {
+    let cabecalho = new Headers({'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers: cabecalho});
+    
+    return this.http.delete(this.uri+produto.id, options)
+      .map((res:Response) => {return res.json()})
+      .catch((erro:any) => Observable.throw(erro));
   }
 
 }

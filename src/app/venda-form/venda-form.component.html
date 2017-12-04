@@ -1,3 +1,8 @@
-<p>
-  venda-form works!
-</p>
+<form>
+    <div class="form-group">
+      <label for="produtos">Produtos</label>
+      <select type="text" class="form-control" id="produtos">
+        <option *ngFor="let produto of produtos">{{produto.nome}}</option>
+      </select>
+    </div>
+</form>

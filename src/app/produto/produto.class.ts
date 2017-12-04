@@ -4,5 +4,5 @@ export class Produto {
     nome: string;
     valor: number;
     estoque: number;
-    date: Date;
+    created: Date;
 }

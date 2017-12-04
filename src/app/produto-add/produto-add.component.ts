@@ -11,7 +11,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ProdutoAddComponent implements OnInit {
 
   produto: Produto;
-  id:number;
+  id: number;
+  public alerts: any = [];
 
   constructor(
     private produtoService: ProdutoService, private router: Router,
@@ -20,21 +21,58 @@ export class ProdutoAddComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params['id'];
+    this.produto = new Produto;
 
-    if(isNaN(this.id)) {
-      this.produto = new Produto;
-    }else{
-      this.produto = Object.assign({}, this.produtoService.getById(this.id));
+    if(!isNaN(this.id)) {
+      this.produtoService.getById(this.id).subscribe(
+        dados => { this.produto = dados; },
+        erro => { console.log('ERROR', erro); }
+      );
     }
   }
 
   add() {
-    if( this.validate() ) { 
+    if( this.validate() ) {
       if(isNaN(this.id)) {
-        this.produtoService.add(this.produto);
+        this.produtoService.add(this.produto).subscribe(
+          ( dados: any ) => {
+            if(dados.message == 'Saved') {
+              this.alerts.push({
+                type: 'success',
+                msg: 'Produto salvo com sucesso',
+                timeout: 3000
+              });
+            }else{
+              this.alerts.push({
+                type: 'warning',
+                msg: 'Ocorreu um erro',
+                timeout: 3000
+              });
+            }
+           },
+          erro => { console.log('ERROR', erro); }
+        );
+
         this.produto = new Produto;
       }else {
-        this.produtoService.edit(this.id, this.produto);
+        this.produtoService.edit(this.id, this.produto).subscribe(
+          ( dados: any ) => {
+            if(dados.message == 'Saved') {
+              this.alerts.push({
+                type: 'success',
+                msg: 'Produto salvo com sucesso',
+                timeout: 3000
+              });
+            }else{
+              this.alerts.push({
+                type: 'warning',
+                msg: 'Ocorreu um erro',
+                timeout: 3000
+              });
+            }
+           },
+          erro => { console.log('ERROR', erro); }
+        );
       }
     }
   }

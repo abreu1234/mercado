@@ -7,7 +7,7 @@ export class VendaService {
   vendas: Venda[] = [
     {
       id: 1,
-      produtos: [{id: 1, nome: 'Produto1', ref: 'REF01', valor: 20, estoque: 5, date: new Date(2017, 9, 18)}],
+      produtos: [],
       cliente: {id: 2, cpf: '123.123.123-00', nome: 'Cliente 2', data_nascimento: new Date(1990, 5, 4)},
       data: new Date(2017, 5, 5),
       total: 20
@@ -19,6 +19,11 @@ export class VendaService {
 
   get() {
     return this.vendas;
+  }
+
+  add(venda: Venda) {
+    venda.id = this.ai++;
+    this.vendas.push(venda);
   }
 
 }
