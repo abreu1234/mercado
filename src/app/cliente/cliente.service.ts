@@ -1,40 +1,62 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
 
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs/RX';
+
 @Injectable()
 export class ClienteService {
 
-  clientes: Cliente[] = [
-    {id: 1, cpf: '123.123.123-00', nome: 'Cliente 1', data_nascimento: new Date(1990, 5, 5)},
-    {id: 2, cpf: '123.123.123-00', nome: 'Cliente 2', data_nascimento: new Date(1990, 5, 4)}
-  ];
-  ai: number = 3;
+  clientes: Cliente[] = [];
+  uri: string = 'http://localhost/mercado_api/api/cliente/';
 
-  constructor() { }
+  constructor(private http: Http) { }
 
-  get() {
-    return this.clientes;
+  get(): Observable<Cliente[]> {
+    return this.http.get( this.uri )
+      .map((res: Response) => {
+        return res.json().cliente;
+      })
+      .catch((erro: any) => Observable.throw(erro));
   }
 
-  getById(id:number) {
-    return this.clientes.find(cliente => cliente.id == id);
+  getById(id:number): Observable<Cliente> {
+    return this.http.get( this.uri+id )
+    .map((res: Response) => {
+      return res.json().cliente; 
+    })
+    .catch((erro: any) => Observable.throw(erro));
   }
 
-  add(cliente: Cliente) {
-    cliente.id = this.ai++;
-    this.clientes.push(cliente);
+  add(cliente: Cliente): Observable<Cliente> {
+    let bodyString = JSON.stringify(Cliente);
+    let cabecalho = new Headers({'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers: cabecalho});
+    
+    return this.http.post(this.uri, bodyString, options)
+      .map((res:Response) => {return res.json()})
+      .catch((erro:any) => Observable.throw(erro));
   }
 
-  edit(id: number, cliente: Cliente) {
-    let index = this.clientes.indexOf(this.getById(id), 0);
-    this.clientes[index] = cliente;
+  edit(id: number, cliente: Cliente): Observable<Cliente> {
+    let bodyString = JSON.stringify(cliente);
+    let cabecalho = new Headers({'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers: cabecalho});
+    
+    return this.http.put(this.uri+id, bodyString, options)
+      .map((res:Response) => {return res.json()})
+      .catch((erro:any) => Observable.throw(erro));
   }
 
-  remove(cliente: Cliente) {
-    let index = this.clientes.indexOf(cliente, 0);
-    if(index > -1) {
-      this.clientes.splice(index, 1);
-    }
+  remove(cliente: Cliente): Observable<Cliente> {
+    let cabecalho = new Headers({'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers: cabecalho});
+    
+    return this.http.delete(this.uri+cliente.id, options)
+      .map((res:Response) => {return res.json()})
+      .catch((erro:any) => Observable.throw(erro));
   }
 
 }

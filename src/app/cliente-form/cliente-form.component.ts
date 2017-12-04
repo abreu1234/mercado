@@ -24,13 +24,14 @@ export class ClienteFormComponent implements OnInit {
 
   ngOnInit() {
     this.bsConfig = Object.assign({}, {locale: 'ptBr'});
-
     this.id = this.activatedRoute.snapshot.params['id'];
+    this.cliente = new Cliente;
 
-    if(isNaN(this.id)) {
-      this.cliente = new Cliente;
-    }else{
-      this.cliente = Object.assign({}, this.clienteService.getById(this.id));
+    if(!isNaN(this.id)) {
+      this.clienteService.getById(this.id).subscribe(
+        dados => { this.cliente = dados; },
+        erro => { console.log('ERROR', erro); }
+      );
     }
   }
 
@@ -41,7 +42,24 @@ export class ClienteFormComponent implements OnInit {
   add() {
     if( this.validate() ) {
       if(isNaN(this.id)) {
-        this.clienteService.add(this.cliente);
+        this.clienteService.add(this.cliente).subscribe(
+          ( dados: any ) => {
+            if(dados.message == 'Saved') {
+              this.alerts.push({
+                type: 'success',
+                msg: 'Cliente salvo com sucesso',
+                timeout: 3000
+              });
+            }else{
+              this.alerts.push({
+                type: 'warning',
+                msg: 'Ocorreu um erro',
+                timeout: 3000
+              });
+            }
+           },
+          erro => { console.log('ERROR', erro); }
+        );
         this.cliente = new Cliente;
 
         this.alerts.push({
@@ -50,12 +68,25 @@ export class ClienteFormComponent implements OnInit {
           timeout: 3000
         });
       }else {
-        this.alerts.push({
-          type: 'success',
-          msg: 'Cliente editado com sucesso',
-          timeout: 3000
-        });
-        this.clienteService.edit(this.id, this.cliente);
+        this.clienteService.edit(this.id, this.cliente).subscribe(
+          ( dados: any ) => {
+            console.log(dados);
+            if(dados.message == 'Saved') {
+              this.alerts.push({
+                type: 'success',
+                msg: 'Produto salvo com sucesso',
+                timeout: 3000
+              });
+            }else{
+              this.alerts.push({
+                type: 'warning',
+                msg: 'Ocorreu um erro',
+                timeout: 3000
+              });
+            }
+           },
+          erro => { console.log('ERROR', erro); }
+        );
       }
     }
   }

@@ -11,7 +11,6 @@ export class ProdutoService {
 
   produtos: Produto[] = [];
   uri: string = 'http://localhost/mercado_api/api/produto/';
-  ai: number = 2;
 
   constructor(private http: Http) { }
 
@@ -31,7 +30,7 @@ export class ProdutoService {
     .catch((erro: any) => Observable.throw(erro));
   }
 
-  add(produto: Produto) {
+  add(produto: Produto): Observable<Produto> {
     let bodyString = JSON.stringify(produto);
     let cabecalho = new Headers({'Content-Type': 'application/json'});
     let options = new RequestOptions({headers: cabecalho});
