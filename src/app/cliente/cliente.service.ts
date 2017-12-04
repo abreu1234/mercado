@@ -30,8 +30,8 @@ export class ClienteService {
     .catch((erro: any) => Observable.throw(erro));
   }
 
-  add(cliente: Cliente): Observable<Cliente> {
-    let bodyString = JSON.stringify(Cliente);
+  add(c: Cliente): Observable<Cliente> {
+    let bodyString = JSON.stringify(c);
     let cabecalho = new Headers({'Content-Type': 'application/json'});
     let options = new RequestOptions({headers: cabecalho});
     

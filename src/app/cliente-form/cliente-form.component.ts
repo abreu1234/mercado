@@ -50,6 +50,7 @@ export class ClienteFormComponent implements OnInit {
                 msg: 'Cliente salvo com sucesso',
                 timeout: 3000
               });
+              this.cliente = new Cliente;
             }else{
               this.alerts.push({
                 type: 'warning',
@@ -60,13 +61,7 @@ export class ClienteFormComponent implements OnInit {
            },
           erro => { console.log('ERROR', erro); }
         );
-        this.cliente = new Cliente;
 
-        this.alerts.push({
-          type: 'success',
-          msg: 'Cliente adicionado com sucesso',
-          timeout: 3000
-        });
       }else {
         this.clienteService.edit(this.id, this.cliente).subscribe(
           ( dados: any ) => {
