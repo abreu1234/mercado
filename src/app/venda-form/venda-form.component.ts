@@ -3,6 +3,8 @@ import { Venda } from '../venda/venda';
 import { VendaService } from '../venda/venda.service';
 import { Produto } from '../produto/produto.class';
 import { ProdutoService } from '../produto/produto.service';
+import { Cliente } from '../cliente/cliente';
+import { ClienteService } from '../cliente/cliente.service';
 
 @Component({
   selector: 'app-venda-form',
@@ -13,21 +15,49 @@ export class VendaFormComponent implements OnInit {
 
   venda: Venda;
   produtos: Produto[];
+  clientes: Cliente[];
+  public alerts: any = [];
 
   constructor(
     private vendaService: VendaService,
-    private produtoService: ProdutoService
+    private produtoService: ProdutoService, private clienteService: ClienteService
   ) { }
 
   ngOnInit() {
     this.venda = new Venda;
-    //this.produtos = this.produtoService.get();
+    this.produtoService.get().subscribe(
+      dados => { this.produtos = dados; },
+      erro => { console.log('ERROR', erro); }
+    );
+    this.clienteService.get().subscribe(
+      dados => { this.clientes = dados; },
+      erro => { console.log('ERROR', erro); }
+    );
   }
 
   add() {
     if( this.validate() ) {
-      this.vendaService.add(this.venda);
-      this.venda = new Venda;
+      this.vendaService.add(this.venda).subscribe(
+        ( dados: any ) => {
+          console.log(dados);
+          if(dados.message == 'Saved') {
+            this.alerts.push({
+              type: 'success',
+              msg: 'Venda efetuada com sucesso',
+              timeout: 3000
+            });
+          }else{
+            this.alerts.push({
+              type: 'warning',
+              msg: 'Ocorreu um erro',
+              timeout: 3000
+            });
+          }
+         },
+        erro => { console.log('ERROR', erro); }
+      );
+
+      //this.venda = new Venda;
     }
   }
 

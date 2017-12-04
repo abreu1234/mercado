@@ -14,7 +14,7 @@ export class VendaComponent implements OnInit {
   constructor(private vendaService: VendaService) { }
 
   ngOnInit() {
-    this.vendas = this.vendaService.get();
+    //this.vendas = this.vendaService.get();
   }
 
 }

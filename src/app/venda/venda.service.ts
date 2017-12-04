@@ -1,29 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Venda } from './venda';
 
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs/RX';
+
 @Injectable()
 export class VendaService {
 
-  vendas: Venda[] = [
-    {
-      id: 1,
-      produtos: [],
-      cliente: {id: 2, cpf: '123.123.123-00', nome: 'Cliente 2', data_nascimento: new Date(1990, 5, 4)},
-      data: new Date(2017, 5, 5),
-      total: 20
-    }
-  ];
-  ai: number = 2;
+  vendas: Venda[] = [];
+  uri: string = 'http://localhost/mercado_api/api/venda/';
 
-  constructor() { }
+  constructor(private http: Http) { }
 
-  get() {
-    return this.vendas;
+  get(): Observable<Venda[]> {
+    return this.http.get( this.uri )
+      .map((res: Response) => {
+        return res.json().venda; 
+      })
+      .catch((erro: any) => Observable.throw(erro));
   }
 
-  add(venda: Venda) {
-    venda.id = this.ai++;
-    this.vendas.push(venda);
+  add(venda: Venda): Observable<Venda> {
+    let bodyString = JSON.stringify(venda);
+    let cabecalho = new Headers({'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers: cabecalho});
+    
+    return this.http.post(this.uri, bodyString, options)
+      .map((res:Response) => {return res.json()})
+      .catch((erro:any) => Observable.throw(erro));
   }
 
 }

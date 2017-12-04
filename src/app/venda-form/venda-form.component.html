@@ -1,8 +1,24 @@
+<div *ngFor="let alert of alerts">
+  <alert [type]="alert.type" dismissible="true" [dismissOnTimeout]="alert.timeout">{{ alert.msg }}</alert>
+</div>
+
+
 <form>
     <div class="form-group">
-      <label for="produtos">Produtos</label>
-      <select type="text" class="form-control" id="produtos">
-        <option *ngFor="let produto of produtos">{{produto.nome}}</option>
+      <label for="cliente">Cliente</label>
+      <select type="text" class="form-control" id="cliente" [(ngModel)]="venda.cliente_id" name="cliente">
+        <option *ngFor="let cliente of clientes" value="{{cliente.id}}">{{cliente.nome}}</option>
       </select>
     </div>
+    <div class="form-group">
+      <label for="produtos">Produtos</label>
+      <select type="text" class="form-control" id="produtos" [(ngModel)]="venda.produto" name="produtos" multiple="true">
+        <option *ngFor="let produto of produtos" value="{{produto.id}}">{{produto.nome}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="total">Valor Total</label>
+      <input type="number" [(ngModel)]="venda.total" name="total" class="form-control" id="total">
+    </div>  
+    <button type="submit" class="btn btn-default" (click)="add()">Salvar</button>
 </form>
